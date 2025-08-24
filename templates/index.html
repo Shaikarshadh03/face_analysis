@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NueraScan AI - Advanced Video Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #0a0a0a;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .background-3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, #001122, #002244, #003366);
+            overflow: hidden;
+        }
+
+        .neural-network {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+        }
+
+        .node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ccff;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .connection {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00ccff, transparent);
+            animation: flow 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        @keyframes flow {
+            0% { opacity: 0; transform: translateX(-100px); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(100px); }
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: #00ccff;
+            text-shadow: 0 0 20px #00ccff, 0 0 40px rgba(0, 204, 255, 0.5);
+            font-family: 'Orbitron', 'Exo 2', 'Rajdhani', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #00ccff, #ffffff, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            0% { 
+                filter: drop-shadow(0 0 10px #00ccff); 
+                transform: scale(1);
+            }
+            100% { 
+                filter: drop-shadow(0 0 25px #00ccff) drop-shadow(0 0 40px rgba(0, 204, 255, 0.3)); 
+                transform: scale(1.02);
+            }
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav a:hover {
+            color: #00ccff;
+            text-shadow: 0 0 10px #00ccff;
+        }
+
+        .page {
+            min-height: 100vh;
+            padding: 100px 50px;
+            position: relative;
+            transition: all 0.8s ease;
+        }
+
+        .page.hidden {
+            display: none;
+        }
+
+        .home-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 80vh;
+            position: relative;
+        }
+
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 60px;
+        }
+
+        .hero-text {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .hero-text h1 {
+            font-size: 4.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00ccff, #0099cc, #ffffff, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: heroGlow 2s infinite alternate;
+            font-family: 'Orbitron', 'Exo 2', 'Rajdhani', sans-serif;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 30px rgba(0, 204, 255, 0.5);
+        }
+
+        .description {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .select-folder-btn {
+            padding: 18px 40px;
+            background: linear-gradient(45deg, #00ccff, #0099cc);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 204, 255, 0.3);
+            animation: breathe 3s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .select-folder-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0, 204, 255, 0.5);
+        }
+
+        .select-folder-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            animation: none;
+        }
+
+        .upload-progress {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #00ccff, #0099cc);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1.1em;
+            color: #00ccff;
+        }
+
+        .features-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .feature-box {
+            background: rgba(0, 204, 255, 0.1);
+            border: 1px solid rgba(0, 204, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 204, 255, 0.2);
+            border-color: #00ccff;
+        }
+
+        .analysis-page {
+            flex-direction: column;
+        }
+
+        .video-section {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .video-container h3 {
+            color: #00ccff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        #videoPlayer, #analysisVideoPlayer {
+            width: 100%;
+            border-radius: 15px;
+            max-height: 300px;
+        }
+
+        /* Behavioral Summary Styles */
+        .behavioral-summary {
+            background: linear-gradient(135deg, rgba(0, 204, 255, 0.15), rgba(0, 153, 204, 0.1));
+            border: 2px solid rgba(0, 204, 255, 0.4);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            backdrop-filter: blur(15px);
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 204, 255, 0.2);
+        }
+
+        .behavioral-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00ccff, #0099cc, #00ccff);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .behavioral-summary h3 {
+            color: #00ccff;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
+        }
+
+        .behavioral-summary-text {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #e0e0e0;
+            text-align: justify;
+            font-style: italic;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border-left: 4px solid #00ccff;
+        }
+
+        .results-section {
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .analysis-results {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 204, 255, 0.3);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .analysis-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 204, 255, 0.1);
+            border-radius: 15px;
+            border-left: 4px solid #00ccff;
+        }
+
+        .analysis-section h3 {
+            color: #00ccff;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .screenshots-section {
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .screenshot-item {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(0, 204, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .screenshot-item:hover {
+            transform: scale(1.05);
+            border-color: #00ccff;
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .screenshot-item img:hover {
+            transform: scale(1.05);
+        }
+
+        .screenshot-info {
+            font-size: 0.9em;
+            color: #00ccff;
+        }
+
+        .happy { background: #4CAF50; color: white; }
+        .sad { background: #2196F3; color: white; }
+        .angry { background: #F44336; color: white; }
+        .neutral { background: #9E9E9E; color: white; }
+        .surprised { background: #FF9800; color: white; }
+        .fear { background: #9C27B0; color: white; }
+        .disgust { background: #795548; color: white; }
+
+        .emotion-distribution {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .emotion-timeline {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .emotion-entry {
+            margin-bottom: 8px;
+            padding: 8px;
+            border-left: 3px solid #00ccff;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .more-text {
+            text-align: center;
+            font-style: italic;
+            color: #00ccff;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 204, 255, 0.3);
+            border-top: 3px solid #00ccff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 100px;
+            left: 50px;
+            padding: 12px 25px;
+            background: rgba(0, 204, 255, 0.2);
+            border: 1px solid #00ccff;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: #00ccff;
+            color: black;
+        }
+
+        .status-message {
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-size: 1.1em;
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+        }
+
+        .status-error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #F44336;
+            color: #F44336;
+        }
+
+        .status-info {
+            background: rgba(0, 204, 255, 0.2);
+            border: 1px solid #00ccff;
+            color: #00ccff;
+        }
+
+        #videoInput {
+            display: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: #00ccff;
+        }
+
+        .text-summary {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            line-height: 1.6;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5em;
+            }
+            
+            .features-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .video-section {
+                flex-direction: column;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .screenshots-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .page {
+                padding: 100px 20px;
+            }
+
+            .behavioral-summary-text {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D Background -->
+    <div class="background-3d">
+        <div class="neural-network" id="neuralNetwork"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">NueraScan AI</div>
+        <div class="nav">
+            <a href="#" onclick="showHomePage()">Home</a>
+            <a href="#" onclick="showAnalysisPage()" id="analysisNavLink" style="display: none;">Analysis</a>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div class="page" id="homePage">
+        <div class="home-content">
+            <div class="hero-section">
+                <div class="hero-text">
+                    <h1>NueraScan AI</h1>
+                    <div class="description">
+                        Advanced AI-powered video analysis platform that captures real-time screenshots of head and hand movements, analyzes gestures, and provides comprehensive behavioral insights with visual evidence.
+                    </div>
+                    
+                    <input type="file" id="videoInput" accept="video/*">
+                    <button class="select-folder-btn" id="uploadBtn" onclick="document.getElementById('videoInput').click()">
+                        Select Video File
+                    </button>
+                    
+                    <!-- Upload Progress -->
+                    <div class="upload-progress" id="uploadProgress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">Processing...</div>
+                    </div>
+                    
+                    <!-- Status Messages -->
+                    <div id="statusMessage"></div>
+                </div>
+                <div class="hero-visual" id="heroVisual">
+                    <!-- 3D visualization elements -->
+                </div>
+            </div>
+
+            <!-- Feature Boxes -->
+            <div class="features-section">
+                <div class="feature-box">
+                    <div style="font-size: 3em; margin-bottom: 20px; color: #00ccff;">📸</div>
+                    <h3>Movement Screenshots</h3>
+                    <p>Automatically captures screenshots when head or hand movements are detected.</p>
+                    <p>Visual evidence of every movement with precise timestamps and movement direction.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div style="font-size: 3em; margin-bottom: 20px; color: #00ccff;">🤖</div>
+                    <h3>AI Movement Detection</h3>
+                    <p>Advanced tracking technology with real-time head and hand movement detection.</p>
+                    <p>Captures directional movements and gestures with high accuracy using deep learning algorithms.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div style="font-size: 3em; margin-bottom: 20px; color: #00ccff;">👁️</div>
+                    <h3>Behavioral Analysis</h3>
+                    <p>Comprehensive behavioral insights including emotional tone, gaze patterns, and engagement levels.</p>
+                    <p>AI-powered analysis with human-readable behavioral summaries and visual evidence.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Page -->
+    <div class="page hidden analysis-page" id="analysisPage">
+        <button class="back-btn" onclick="showHomePage()">← Back to Home</button>
+        
+        <div class="loading" id="loadingIndicator">
+            <div class="spinner"></div>
+            <h3>Analyzing Video...</h3>
+            <p>AI is processing movements and capturing screenshots</p>
+        </div>
+
+        <div id="analysisContent" style="display: none;">
+            <!-- Video Section -->
+            <div class="video-section">
+                <div class="video-container">
+                    <h3>Original Video</h3>
+                    <video id="videoPlayer" controls>
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <div class="video-container">
+                    <h3>Analysis Video (with Green Boxes)</h3>
+                    <video id="analysisVideoPlayer" controls>
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+
+            <!-- Behavioral Summary Section -->
+            <div class="behavioral-summary">
+                <h3>🧠 BEHAVIORAL SUMMARY</h3>
+                <div class="behavioral-summary-text" id="behavioralSummaryText">
+                    Generating behavioral analysis summary...
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section">
+                <h2 style="color: #00ccff; text-align: center; margin-bottom: 30px; font-size: 2em;">Analysis Results</h2>
+                
+                <div class="results-grid">
+                    <div class="analysis-results">
+                        <div class="analysis-section">
+                            <h3>👁️ Head Movement Tracking</h3>
+                            <div id="headMovementResults">
+                                <p>Tracking head movements and direction changes...</p>
+                            </div>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h3>😊 Emotion Analysis</h3>
+                            <div id="emotionAnalysisResults">
+                                <p>Analyzing emotional tone throughout the video...</p>
+                            </div>
+                        </div>
+
+                        <div class="analysis-section">
+                            <h3>📊 Analysis Summary</h3>
+                            <div id="summaryResults">
+                                <p>Generating comprehensive movement analysis report...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-results">
+                        <div class="analysis-section">
+                            <h3>📝 Text Summary</h3>
+                            <div class="text-summary" id="textSummary">
+                                <p>Generating detailed text summary of analysis...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Screenshots Section -->
+                <div class="screenshots-section">
+                    <h3 style="color: #00ccff; margin-bottom: 20px; font-size: 1.8em;">📸 Captured Movement Screenshots</h3>
+                    <div id="screenshotsGrid" class="screenshots-grid">
+                        <!-- Screenshots will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screenshot Modal -->
+    <div id="screenshotModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Screenshot">
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentVideoUrl = '';
+        let analysisComplete = false;
+        let statusCheckInterval = null;
+
+        // Initialize neural network animation
+        document.addEventListener('DOMContentLoaded', function() {
+            createNeuralNetwork();
+            setupEventListeners();
+            setupModal();
+        });
+
+        function createNeuralNetwork() {
+            const network = document.getElementById('neuralNetwork');
+            
+            // Create nodes
+            for (let i = 0; i < 50; i++) {
+                const node = document.createElement('div');
+                node.className = 'node';
+                node.style.left = Math.random() * 100 + '%';
+                node.style.top = Math.random() * 100 + '%';
+                node.style.animationDelay = Math.random() * 2 + 's';
+                network.appendChild(node);
+            }
+            
+            // Create connections
+            for (let i = 0; i < 30; i++) {
+                const connection = document.createElement('div');
+                connection.className = 'connection';
+                connection.style.left = Math.random() * 100 + '%';
+                connection.style.top = Math.random() * 100 + '%';
+                connection.style.width = Math.random() * 200 + 50 + 'px';
+                connection.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+                connection.style.animationDelay = Math.random() * 3 + 's';
+                network.appendChild(connection);
+            }
+        }
+
+        function setupEventListeners() {
+            const videoInput = document.getElementById('videoInput');
+            videoInput.addEventListener('change', handleVideoUpload);
+        }
+
+        function setupModal() {
+            const modal = document.getElementById('screenshotModal');
+            const closeBtn = document.querySelector('.close-modal');
+            
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        }
+
+        function handleVideoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            if (!file.type.startsWith('video/')) {
+                showStatusMessage('Please select a valid video file.', 'error');
+                return;
+            }
+
+            // Check file size (500MB limit)
+            const maxSize = 500 * 1024 * 1024; // 500MB
+            if (file.size > maxSize) {
+                showStatusMessage('File too large. Maximum size is 500MB.', 'error');
+                return;
+            }
+
+            uploadVideo(file);
+        }
+
+        function uploadVideo(file) {
+            const formData = new FormData();
+            formData.append('video', file);
+
+            showStatusMessage('Uploading video...', 'info');
+            showUploadProgress();
+            disableUploadButton();
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    currentVideoUrl = `/video/${data.filename}`;
+                    showStatusMessage('Upload successful! Starting movement analysis...', 'success');
+                    startStatusMonitoring();
+                } else {
+                    throw new Error(data.error || 'Upload failed');
+                }
+            })
+            .catch(error => {
+                console.error('Upload error:', error);
+                showStatusMessage('Upload failed: ' + error.message, 'error');
+                hideUploadProgress();
+                enableUploadButton();
+            });
+        }
+
+        function startStatusMonitoring() {
+            statusCheckInterval = setInterval(checkAnalysisStatus, 1000);
+        }
+
+        function checkAnalysisStatus() {
+            fetch('/status')
+                .then(response => response.json())
+                .then(data => {
+                    updateProgress(data.progress);
+                    
+                    if (data.status === 'completed') {
+                        clearInterval(statusCheckInterval);
+                        analysisComplete = true;
+                        hideUploadProgress();
+                        showStatusMessage('Movement analysis complete! View results with screenshots.', 'success');
+                        enableAnalysisNavigation();
+                        loadAnalysisResults();
+                    } else if (data.status === 'error') {
+                        clearInterval(statusCheckInterval);
+                        showStatusMessage('Analysis failed: ' + data.error, 'error');
+                        hideUploadProgress();
+                        enableUploadButton();
+                    } else if (data.status === 'analyzing') {
+                        updateProgressText(`Analyzing... ${data.progress}% complete`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Status check error:', error);
+                });
+        }
+
+        function loadAnalysisResults() {
+            fetch('/results')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayResults(data.results);
+                    }
+                })
+                .catch(error => {
+                    console.error('Results loading error:', error);
+                });
+        }
+
+        function displayResults(results) {
+            // Set video sources
+            const videoPlayer = document.getElementById('videoPlayer');
+            const analysisVideoPlayer = document.getElementById('analysisVideoPlayer');
+            
+            videoPlayer.src = currentVideoUrl;
+            if (results.analysis_video_url) {
+                analysisVideoPlayer.src = results.analysis_video_url;
+            }
+
+            // Display behavioral summary
+            displayBehavioralSummary(results.behavioral_summary || '');
+            
+            // Display all results
+            displayHeadMovementResults(results.head_movements || []);
+            displayEmotionAnalysis(results.emotions_timeline || []);
+            displaySummaryResults(results.summary_stats || {});
+            displayTextSummary(results.text_summary || '');
+            displayScreenshots(results.screenshots || []);
+
+            // Hide loading and show content
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('analysisContent').style.display = 'block';
+        }
+
+        function displayBehavioralSummary(summary) {
+            const container = document.getElementById('behavioralSummaryText');
+            if (summary) {
+                container.textContent = summary;
+            } else {
+                container.textContent = "No behavioral summary available. The analysis focused on movement detection and screenshot capture.";
+            }
+        }
+
+        function displayHeadMovementResults(movements) {
+            const container = document.getElementById('headMovementResults');
+            container.innerHTML = '';
+            
+            if (!movements || movements.length === 0) {
+                container.innerHTML = '<p>No significant head movements detected</p>';
+                return;
+            }
+            
+            // Calculate statistics
+            let leftCount = 0, rightCount = 0, upCount = 0, downCount = 0;
+            movements.forEach(move => {
+                if (move.direction.includes('left')) leftCount++;
+                if (move.direction.includes('right')) rightCount++;
+                if (move.direction.includes('up')) upCount++;
+                if (move.direction.includes('down')) downCount++;
+            });
+            
+            // Display summary
+            container.innerHTML = `
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+                    <div style="background: rgba(0,204,255,0.2); padding: 8px 15px; border-radius: 20px;">
+                        <strong>Total Movements:</strong> ${movements.length}
+                    </div>
+                    <div style="background: rgba(0,204,255,0.2); padding: 8px 15px; border-radius: 20px;">
+                        <strong>Left:</strong> ${leftCount}
+                    </div>
+                    <div style="background: rgba(0,204,255,0.2); padding: 8px 15px; border-radius: 20px;">
+                        <strong>Right:</strong> ${rightCount}
+                    </div>
+                    <div style="background: rgba(0,204,255,0.2); padding: 8px 15px; border-radius: 20px;">
+                        <strong>Up:</strong> ${upCount}
+                    </div>
+                    <div style="background: rgba(0,204,255,0.2); padding: 8px 15px; border-radius: 20px;">
+                        <strong>Down:</strong> ${downCount}
+                    </div>
+                </div>
+            `;
+            
+            // Display detailed movements
+            const details = document.createElement('div');
+            details.style.maxHeight = '150px';
+            details.style.overflowY = 'auto';
+            details.style.padding = '10px';
+            details.style.background = 'rgba(0,0,0,0.3)';
+            details.style.borderRadius = '10px';
+            
+            movements.slice(0, 10).forEach(move => {
+                const moveDiv = document.createElement('div');
+                moveDiv.style.marginBottom = '5px';
+                moveDiv.innerHTML = `
+                    <strong>${move.timestamp.toFixed(1)}s</strong>: ${move.direction} 
+                    ${move.magnitude ? `(Intensity: ${(move.magnitude * 100).toFixed(0)}%)` : ''}
+                `;
+                details.appendChild(moveDiv);
+            });
+            
+            if (movements.length > 10) {
+                const moreText = document.createElement('div');
+                moreText.style.textAlign = 'center';
+                moreText.style.fontStyle = 'italic';
+                moreText.textContent = `+ ${movements.length - 10} more movements...`;
+                details.appendChild(moreText);
+            }
+            
+            container.appendChild(details);
+        }
+
+        function displayEmotionAnalysis(emotions) {
+            const container = document.getElementById('emotionAnalysisResults');
+            container.innerHTML = '<h3>😊 Emotion Analysis</h3>';
+            
+            if (!emotions || emotions.length === 0) {
+                container.innerHTML += '<p>No emotion data available</p>';
+                return;
+            }
+            
+            // Count emotion occurrences
+            const emotionCounts = {};
+            emotions.forEach(emotion => {
+                const dominant = emotion.dominant || 'neutral';
+                emotionCounts[dominant] = (emotionCounts[dominant] || 0) + 1;
+            });
+            
+            // Display emotion distribution
+            container.innerHTML += `
+                <div style="margin-bottom: 15px;">
+                    <h4 style="color: #00ccff; margin-bottom: 10px;">Emotion Distribution</h4>
+                    <div class="emotion-distribution">
+            `;
+            
+            Object.entries(emotionCounts).forEach(([emotion, count]) => {
+                container.innerHTML += `<span class="${emotion}">${emotion}: ${count}</span>`;
+            });
+            
+            container.innerHTML += `</div></div>`;
+            
+            // Display timeline
+            const timeline = document.createElement('div');
+            timeline.className = 'emotion-timeline';
+            
+            emotions.slice(0, 8).forEach(emotion => {
+                const entry = document.createElement('div');
+                entry.className = 'emotion-entry';
+                entry.innerHTML = `
+                    <strong>${emotion.timestamp.toFixed(1)}s</strong>: ${emotion.dominant}
+                `;
+                timeline.appendChild(entry);
+            });
+            
+            if (emotions.length > 8) {
+                const moreText = document.createElement('div');
+                moreText.className = 'more-text';
+                moreText.textContent = `+ ${emotions.length - 8} more emotion changes...`;
+                timeline.appendChild(moreText);
+            }
+            
+            container.appendChild(timeline);
+        }
+
+        function displaySummaryResults(summary) {
+            const container = document.getElementById('summaryResults');
+            container.innerHTML = '<h3>📊 Analysis Summary</h3>';
+            
+            if (!summary || Object.keys(summary).length === 0) {
+                container.innerHTML += '<p>No summary available</p>';
+                return;
+            }
+            
+            // Display engagement metrics
+            container.innerHTML += `
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                    <h4 style="margin-top: 0; color: #00ccff;">Engagement Metrics</h4>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 150px;">
+                            <p style="margin: 5px 0;"><strong>Head Movements:</strong> ${summary.movement_stats?.head_movements || 0}</p>
+                            <p style="margin: 5px 0;"><strong>Eye Movements:</strong> ${summary.movement_stats?.eye_movements || 0}</p>
+                            <p style="margin: 5px 0;"><strong>Hand Movements:</strong> ${summary.movement_stats?.hand_movements || 0}</p>
+                        </div>
+                        <div style="flex: 1; min-width: 150px;">
+                            <p style="margin: 5px 0;"><strong>Movement Rate:</strong> ${summary.movement_stats?.movement_rate_per_min || 0}/min</p>
+                            <p style="margin: 5px 0;"><strong>Gaze Changes:</strong> ${summary.movement_stats?.gaze_changes || 0}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Display emotion stats
+            if (summary.emotion_stats) {
+                container.innerHTML += `
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h4 style="margin-top: 0; color: #00ccff;">Emotion Statistics</h4>
+                        <p style="margin: 5px 0;"><strong>Dominant Emotion:</strong> ${summary.emotion_stats.dominant_emotion || 'N/A'}</p>
+                        <p style="margin: 5px 0;"><strong>Emotion Changes:</strong> ${summary.emotion_stats.emotion_changes || 0}</p>
+                    </div>
+                `;
+            }
+            
+            // Display screenshot summary
+            container.innerHTML += `
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-top: 15px;">
+                    <h4 style="margin-top: 0; color: #00ccff;">Screenshot Summary</h4>
+                    <p><strong>Total Screenshots:</strong> ${summary.screenshot_stats?.total_screenshots || 0}</p>
+                    <p><strong>Head Movement:</strong> ${summary.screenshot_stats?.head_movement_screenshots || 0}</p>
+                    <p><strong>Eye Movement:</strong> ${summary.screenshot_stats?.eye_movement_screenshots || 0}</p>
+                    <p><strong>Hand Movement:</strong> ${summary.screenshot_stats?.hand_movement_screenshots || 0}</p>
+                </div>
+            `;
+        }
+
+        function displayTextSummary(text) {
+            const container = document.getElementById('textSummary');
+            container.textContent = text || 'No summary text available';
+        }
+
+        function displayScreenshots(screenshots) {
+            const container = document.getElementById('screenshotsGrid');
+            container.innerHTML = '';
+            
+            if (!screenshots || screenshots.length === 0) {
+                container.innerHTML = '<p>No movement screenshots captured during analysis</p>';
+                return;
+            }
+            
+            screenshots.forEach((screenshot, index) => {
+                const item = document.createElement('div');
+                item.className = 'screenshot-item';
+                item.innerHTML = `
+                    <img src="${screenshot.url || screenshot.path}" 
+                         alt="Screenshot at ${screenshot.timestamp}s" 
+                         onclick="showScreenshotModal('${screenshot.url || screenshot.path}', ${screenshot.timestamp})">
+                    <div class="screenshot-info">
+                        <p>${screenshot.timestamp}s</p>
+                        <p><strong>${screenshot.type?.replace('_', ' ').toUpperCase() || 'MOVEMENT'}</strong></p>
+                        ${screenshot.direction ? `<p>Direction: ${screenshot.direction}</p>` : ''}
+                        ${screenshot.description ? `<p>${screenshot.description}</p>` : ''}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function showScreenshotModal(imageUrl, timestamp) {
+            const modal = document.getElementById('screenshotModal');
+            const modalImg = document.getElementById('modalImage');
+            
+            modalImg.src = imageUrl;
+            modalImg.alt = `Screenshot at ${timestamp}s`;
+            modal.style.display = "block";
+        }
+
+        function showUploadProgress() {
+            document.getElementById('uploadProgress').style.display = 'block';
+        }
+
+        function hideUploadProgress() {
+            document.getElementById('uploadProgress').style.display = 'none';
+        }
+
+        function updateProgress(percent) {
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+
+        function updateProgressText(text) {
+            document.getElementById('progressText').textContent = text;
+        }
+
+        function showStatusMessage(message, type) {
+            const container = document.getElementById('statusMessage');
+            container.className = `status-message status-${type}`;
+            container.textContent = message;
+            container.style.display = 'block';
+            
+            // Hide after 5 seconds if it's not an error
+            if (type !== 'error') {
+                setTimeout(() => {
+                    container.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function disableUploadButton() {
+            document.getElementById('uploadBtn').disabled = true;
+        }
+
+        function enableUploadButton() {
+            document.getElementById('uploadBtn').disabled = false;
+        }
+
+        function enableAnalysisNavigation() {
+            document.getElementById('analysisNavLink').style.display = 'block';
+        }
+
+        function showHomePage() {
+            document.getElementById('homePage').classList.remove('hidden');
+            document.getElementById('analysisPage').classList.add('hidden');
+        }
+
+        function showAnalysisPage() {
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('analysisPage').classList.remove('hidden');
+            
+            // Show loading if analysis isn't complete
+            if (!analysisComplete) {
+                document.getElementById('loadingIndicator').style.display = 'block';
+                document.getElementById('analysisContent').style.display = 'none';
+            } else {
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('analysisContent').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

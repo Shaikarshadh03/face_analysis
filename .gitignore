@@ -1,0 +1,18 @@
+# Ignore virtual environment
+venv/
+
+# Python cache and temp files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Large binary files
+*.dll
+*.so
+*.dylib
+*.exe
+*.lib
+
+# OS files
+.DS_Store
